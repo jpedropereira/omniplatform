@@ -1,0 +1,35 @@
+version: "3.8"
+services:
+
+  omniplatform:
+    build: .
+    command: uvicorn main:app --port 9000 --host 0.0.0.0 --reload
+    volumes:
+      - .:/code
+    ports:
+      - "9000:9000"
+    depends_on:
+      - db
+    image: omniplatform:omniplatform
+    container_name: omniplatform_container
+    networks:
+      default:
+
+  db:
+    image: postgres:14.5
+    volumes:
+      - ./data/db:/var/lib/postgressql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    container_name: omniplatform_db
+    ports:
+      - "5432:5432"
+    networks:
+      default:
+
+networks:
+  default:
+    driver: bridge
+
